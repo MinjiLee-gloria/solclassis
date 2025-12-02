@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0d0d0d;
+  color: #e0e0e0;
+  font-family: "Inter", sans-serif;
+}
+
+/* 버튼 스타일 */
+.button {
+  border: 2px solid #ff007f;
+  color: #ff007f;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: #ff007f;
+  color: #0d0d0d;
+  box-shadow: 0 0 10px #ff007f;
+}
+
+/* 카드 및 모달 */
+.card {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(255, 0, 127, 0.2);
+}
+
+.modal {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+}

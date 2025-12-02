@@ -1,0 +1,310 @@
+Streaming transaction logs mentioning Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3. Confirmed commitment
+Transaction executed in slot 24982:
+  Signature: 5KpQSBP8wuqCqG2znmYTNxqrf7Yeg8LoCXhJe8GrTVpUm7fwTMeS2TpnqMoisysdFMcuJTUWdRTL48d9uCeJ9T1u
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJhYbKlhc12HRQpUvcyEcNNtPLOM9wYDTI7Lk87ueySFvA0AAABUZXN0IENhbXBhaWduAMqaOwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8992 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 24984:
+  Signature: 2Le7Ps9VbAf3uFmc7gVtiUQRDMqjaTnAGfqSpaG2J4zzxeUCVkQQVNd5WerWAXtKLL7A2PGY2CNDGJNBQchanLTW
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 13645 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 24985:
+  Signature: 2CGBrnW2rZ9deApo5h2J7R8rU7aJT4L2RKWhTLektd3pgvDg6xW2Lo5uoCkttX56xFKpwE4pPv6QfFGgf4vi1kRM
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW55YbKlhc12HRQpUvcyEcNNtPLOM9wYDTI7Lk87ueySFvIYF3OAsc7ykKs8Owcay5jPQeo2K/N4fPqtKhsYCa6NNAGXNHQAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 12161 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25000:
+  Signature: 55bps1uGuVNrxZe715C1neFMyfEAxwZTY7doeWjJWggCivsjp2rLymZieW4GbmpRzdT7UJyNVoCMSjJG5FeEiBbM
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: EndCampaign
+    Program data: MsB2DMWrxrFYbKlhc12HRQpUvcyEcNNtPLOM9wYDTI7Lk87ueySFvABlzR0AAAAA
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 4319 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25001:
+  Signature: 5vqG12Gv6Qn9ZJsG4NGjCkrQjMxvvM5c3Lma76EBzrD3dUZZZQptesyAQZRxco1ohY3qAXchjYpUtfkx1LnscHZM
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Refund
+    Program data: y1js6cCyOaFYbKlhc12HRQpUvcyEcNNtPLOM9wYDTI7Lk87ueySFvIYF3OAsc7ykKs8Owcay5jPQeo2K/N4fPqtKhsYCa6NNAGXNHQAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 9800 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25002:
+  Signature: 4UhuG3s3LNj1NB7QR7prhAdWPc7kvKv1r83tK1p4yRPxpuxqtKGQoHhsg16BvZ8mowpr1L5qdTsGzCEUaZTjiGAT
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJik/qbfVvsnLr1umd/wDTqq8nGB3fp7GaEYRmSPqzDPjhMAAABTdWNjZXNzZnVsIENhbXBhaWduAMqaOwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8874 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25003:
+  Signature: 3FErFa6Gjy34EAH8rxqa9Q8zFYuPcKtdyECBqPYgSdWtPTTRenRh1hPH3r3GGaV5PRnU5Z8PvMCrmWMXtbsEHKTF
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 12035 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25004:
+  Signature: 43RCm6pC73Qyy8hSCLE3mLMdiTUPyMn3kwh3i4y2zXEZZCnhkt1b3eVZNZrKYj3JS7V2n1uoDD3KNs2oGaE83uTn
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW56k/qbfVvsnLr1umd/wDTqq8nGB3fp7GaEYRmSPqzDPjoYF3OAsc7ykKs8Owcay5jPQeo2K/N4fPqtKhsYCa6NNAMqaOwAAAAA=
+    Program data: cmR1vxZtF4Sk/qbfVvsnLr1umd/wDTqq8nGB3fp7GaEYRmSPqzDPjgDKmjsAAAAA
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 10907 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25005:
+  Signature: 42xbuMsdvstx2QcWCVc1Vun8qgFn1Gr8Sevk7k7ot1MTdh8w3hdv6hHunPWi7cLrq5Vih5LuWonhnkuaMzDKj4UB
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Withdraw
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 4350 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25010:
+  Signature: 4oVnoP33TificMDZDXEyvjqwMv22iUGrKCAtT8sh1PhkeSMNrZE92NdTPUfcFrTmkkfMcMyXkSM3Xrh36foBdchA
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJghydR8ATwXOP2TPZopCkB49bgRNHQqmoG8uw1Eys+0excAAABEdXBsaWNhdGUgRG9uYXRpb24gVGVzdABe0LIAAAAA
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 9052 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25011:
+  Signature: 3uo5HmpoDVf8vcj6GGZNZN1pviyqyunL7EQWLQFMvFxHPBYNQ6msM7yZU14BpomQRKMdDcJL1pgsSpEAmcLcD5ph
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 12145 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25012:
+  Signature: 2QcYRhMvEbDFaDakBmAJJavfWhh6eazSLYhMvasoPdcD87pjG9gKaTXDrBzSZ4RR9eE8fDANciK8HuxkxYSMk7Us
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW54hydR8ATwXOP2TPZopCkB49bgRNHQqmoG8uw1Eys+0e2c9Fi+/MydH2MW+W9WUxnyr6CY/LD0JvrdCVpfboYWoAMqaOwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 10661 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25013:
+  Signature: B5fYdmA1PxexhEXww3mGCv5iPYVrYKRWskeUh4isJAaj4dnL9SQsypxdqMmGvNEyZFNLy8RytvqtEvrgMybKR25
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJifY9ABS156a+e93/OUYbR2UoPJHMpb7GQ6wUERbtb3QhwAAABJbnZhbGlkIERvbmF0aW9uIEFtb3VudCBUZXN0AJQ1dwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 9093 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25014:
+  Signature: 36KJ2ZQwp9vArfJwYiPcXV7WDvB17tF1b6eK4cQ8aD7zq434vMeBwdxvNENhqF7uXDzik8xg7bRTNqBnBEuoTqMN
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 12211 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25015:
+  Signature: 5oWW7QntnKVrQuE9cfr1XxeviwSxi5AJ63NCX1L24h1F4cpXjveGWXgaXoUeVA52TWWqY4WLkvjMAGwEvC1mzDBd
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJgXf70Mz6frtnhjFa7vd/lv9KF2BOCdKrNRzEfmcT7XPhYAAABQb3N0IEVuZCBEb25hdGlvbiBUZXN0AMqaOwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8952 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25027:
+  Signature: 3WWTxbc7E4FLbYfReJb9uxwL4MLtYLLnneWWrKTXTReDxcXBrbde3tqTu2oxm2jPNTgdYT82rtmLY227zmXvXbTR
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 15062 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25028:
+  Signature: 48NLEUBLnZrRSPdVixMoyMVDceSb2JPy4yuhkkVXbtbqZ5fo7EsmHKdc7T8bNDy2Gu8eYwYAaaRzVd3zMqCv8dar
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJgO+n0VHqQo5Jsy3YZRa8gtJ1pOm6+nJ67lp1DjJeclXxUAAABEdXBsaWNhdGUgUmVmdW5kIFRlc3QAypo7AAAAAA==
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8904 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25029:
+  Signature: 2GA5eXAXFpL2ZvfC5EWkcMLRr923jpiGZ3cWCWqp3Rp8xNAeqfPB1szt6aiSurerc1pgMB8XRsqRaSAsApdptayL
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 10531 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25030:
+  Signature: 49nUhncBzUxdDsqVstwsVsm9H77y2JnUJmBv4fbcd7BQNcdAVuZRh9ArHj6ABR18sfRTEb1cUutnquZjeipud8gx
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW54O+n0VHqQo5Jsy3YZRa8gtJ1pOm6+nJ67lp1DjJeclX4YF3OAsc7ykKs8Owcay5jPQeo2K/N4fPqtKhsYCa6NNAGXNHQAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 9047 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25045:
+  Signature: parwdXhStfxCG6s6x5cSDrmmr4pDx5Q1B9Q25UUah9mRkifc8kKfPiMUUYSWNpXUEfSwDgN9GUXkNh1a3BfpEYx
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: EndCampaign
+    Program data: MsB2DMWrxrEO+n0VHqQo5Jsy3YZRa8gtJ1pOm6+nJ67lp1DjJeclXwBlzR0AAAAA
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 4205 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25046:
+  Signature: 2yq7J5G4uLKr522GBJ8DfCwyi3AJ5eZrGc1wu4r3nefptxUZZeYnFRuAsxy2Nti5rWSmWjaRK7dnwMXTCd9gXYqd
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Refund
+    Program data: y1js6cCyOaEO+n0VHqQo5Jsy3YZRa8gtJ1pOm6+nJ67lp1DjJeclX4YF3OAsc7ykKs8Owcay5jPQeo2K/N4fPqtKhsYCa6NNAGXNHQAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 6686 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25047:
+  Signature: 5Texv4ePqjYMLAFAPusCNxVpFbfuhWUNNBoR8fmmH3VihpW9ET9Kgk5rwquhrYkGySk41AUUtuzVpxWtFUQUEtJp
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJgEFOpFyoZkKbRgHprFFF8Xcq9wCvj3I5dDuh7MUwSL0xQAAABNdWx0aXBsZSBEb25vcnMgVGVzdABe0LIAAAAA
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8963 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25052:
+  Signature: 3dbd25C3uWdgvbQqxej546tGgmS88ee17eUB8RUgQdG4qHviaxZjnspemEx2xEBuwzxZVmh54fGiNJJiJrkJtbxe
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 12107 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25053:
+  Signature: 3iBGRqGkkKQrQ4wA2N4ipCxMVJjWeVaN3gwEPXSU6sfuU9JU8Wxm5wsB1suGEuKge27ixmAg8f3RPE6krmYSi6Zy
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW54EFOpFyoZkKbRgHprFFF8Xcq9wCvj3I5dDuh7MUwSL00m/owYfGc5JUicQGqpDPYn4mORd01lC4bjhz/4yikOVAMqaOwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 10623 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25054:
+  Signature: 3T1U7NnV4guqX8BYKq3W5T6Y1n3k3Jw3sNFrQ252sgfAjyGzhkZDjEUfx11W9WSvSHJuQwcenYcS4vZg4R7mVhmN
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 10607 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25055:
+  Signature: nERtEhkmWye97hkh19XXvVNQvBWidzoZHagXqtn8yrByeqZ9oHfXeyShieTwTB6NSWnKgHMVgo87kHjkHZoCbvX
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW54EFOpFyoZkKbRgHprFFF8Xcq9wCvj3I5dDuh7MUwSL02/SziQe1z4EIwMKYpExNDsyPGnCWK8YHop9AbSttynPAMqaOwAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 9123 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25061:
+  Signature: 5fFPAimVEcnU8YLupGWTp6Tatbk8imkbvBVBxfuPdbES5A57SjHVDKyZzvKwEwk1dS2iyh3fwwsZzP95zMgW6Kv2
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: CWJFPTWDQJiKQLT8AyhO8hfzhdpYqAEalTyUqfAJcvvRjje56NShkhgAAABVbmF1dGhvcml6ZWQgUmVmdW5kIFRlc3QAypo7AAAAAA==
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8703 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25062:
+  Signature: SH463ZiAELSWQBj9aNiLfvg6sc5SMwFNNSzTqzodzjW6QtSQYAgwZPDPktZJVDfg1GB2PGHXw46DrmFhPhDQXP2
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: CreateDonationPda
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 10389 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25063:
+  Signature: 48SQn5V1rGkL69sVBAqHQ2Ld7vVNpMCZiYtctusVSrxKrC3ePUdD5bDuhDoZbfosuy3Ud4kvHLuikf9FY2LVn9iq
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program data: oIcgB/FpW56KQLT8AyhO8hfzhdpYqAEalTyUqfAJcvvRjje56NShkoYF3OAsc7ykKs8Owcay5jPQeo2K/N4fPqtKhsYCa6NNAGXNHQAAAAA=
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 8905 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
+Transaction executed in slot 25078:
+  Signature: NtQpK1L1yjNBt5tSZ9vBJM9B39VQoj1LWeF8ppH265BjcRcabN6uh7dhVBU5czm7K9iK8vgQ31BnKUG5APMvCgV
+  Status: Ok
+  Log Messages:
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 invoke [1]
+    Program log: Instruction: EndCampaign
+    Program data: MsB2DMWrxrGKQLT8AyhO8hfzhdpYqAEalTyUqfAJcvvRjje56NShkgBlzR0AAAAA
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 consumed 4063 of 200000 compute units
+    Program Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3 success
