@@ -1,23 +1,16 @@
-import { getProgram } from "@/utils/solana";
-import BN from "bn.js"; 
-export async function POST(req: Request) {
-  const program = getProgram(); 
+// src/app/api/fetchCampaigns/route.ts
+import { NextResponse } from "next/server";
+import { fetchCampaigns } from "@/utils/fetchCampaigns";
 
-  if (!program) {
-    console.error("❌ Solana program is not initialized!");
-    return new Response(JSON.stringify({ success: false, error: "Solana program is not initialized!" }), { status: 500 });
-  }
-
+export async function GET() {
   try {
-    const { goal, endDate } = await req.json();
+    const campaigns = await fetchCampaigns();
+    return NextResponse.json(campaigns, { status: 200 });
+  } catch (error: any) {
+    console.error("❌ Error in /api/fetchCampaigns:", error);
 
-    const tx = await program.methods
-      .createCampaign(new BN(goal), new BN(endDate)) // ✅ 올바른 방식
-      .rpc();
-
-    return new Response(JSON.stringify({ success: true, tx }), { status: 200 });
-  } catch (error) {
-    console.error("❌ Error creating campaign:", error);
-    return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500 });
+    // 🔥 지금은 UI가 깨지는 것보다 "빈 리스트라도 보여주는 것"이 낫다
+    //    나중에 디버깅 끝나면 500으로 돌려도 됨
+    return NextResponse.json([], { status: 200 });
   }
 }
