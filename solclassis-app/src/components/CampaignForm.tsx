@@ -1,65 +1,91 @@
+// src/components/CampaignForm.tsx
 "use client";
 
-import { useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useState, FormEvent } from "react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { AnchorProvider } from "@coral-xyz/anchor";
 import { createCampaignOnChain } from "@/utils/createCampaign";
+import { useRouter } from "next/navigation";
 
 export default function CampaignForm() {
-  const { connected, wallet } = useWallet();
+  const { connection } = useConnection();
+  const wallet = useWallet();
+  const router = useRouter();
 
+  // 폼 상태
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [goal, setGoal] = useState(""); // SOL 단위
-  const [donationAmount, setDonationAmount] = useState(""); // SOL 단위
+  const [goal, setGoal] = useState(""); // SOL 단위로 입력받고, 나중에 lamports로 변환해도 됨
+  const [donationAmount, setDonationAmount] = useState("");
   const [endDate, setEndDate] = useState(""); // YYYY-MM-DD
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setMessage(null);
     setError(null);
+    setSuccessMsg(null);
 
-    if (!connected || !wallet?.adapter) {
-      setError("지갑을 먼저 연결해주세요.");
+    if (!wallet.publicKey) {
+      setError("지갑이 연결되어 있지 않습니다. 상단에서 Phantom 지갑을 먼저 연결해 주세요.");
       return;
     }
 
+    // 숫자 변환
     const goalNum = Number(goal);
     const donationNum = Number(donationAmount);
 
-    if (!goalNum || goalNum <= 0) {
-      setError("목표 금액을 올바르게 입력해주세요.");
+    if (!goalNum || !donationNum) {
+      setError("목표 금액과 기부 단위 금액을 숫자로 입력해 주세요.");
       return;
     }
 
-    if (!donationNum || donationNum <= 0) {
-      setError("기부 단위 금액을 올바르게 입력해주세요.");
+    if (donationNum <= 0) {
+      setError("기부 단위 금액은 0보다 커야 합니다.");
+      return;
+    }
+
+    if (goalNum % donationNum !== 0) {
+      setError("목표 금액은 기부 단위 금액으로 딱 나누어떨어져야 합니다.");
       return;
     }
 
     if (!endDate) {
-      setError("캠페인 종료일을 선택해주세요.");
+      setError("캠페인 종료일을 선택해 주세요.");
       return;
     }
 
-    const endDateObj = new Date(`${endDate}T00:00:00`);
+    // 날짜를 unix timestamp(초)로 변환
+    const endTs = Math.floor(new Date(endDate + "T23:59:59Z").getTime() / 1000);
 
     try {
       setLoading(true);
 
-      const result = await createCampaignOnChain(wallet.adapter, {
-        title,
-        description,
-        goalSol: goalNum,
-        donationSol: donationNum,
-        endDate: endDateObj,
+      const provider = new AnchorProvider(connection, wallet as any, {
+        commitment: "confirmed",
       });
 
-      setMessage(
-        `✅ 캠페인이 생성되었습니다.\nTX: ${result.txSig}\nCampaign: ${result.campaignPubkey}`
+      const { txSig, campaignPubkey } = await createCampaignOnChain(
+        provider,
+        wallet.publicKey,
+        {
+          title,
+          description,
+          // 지금은 lamports 단위로 바로 보낼게 (원하면 여기서 *LAMPORTS_PER_SOL 해도 됨)
+          goal: goalNum,
+          donationAmount: donationNum,
+          endDate: endTs,
+        },
+      );
+
+      setSuccessMsg(
+        [
+          "✅ 캠페인이 성공적으로 생성되었습니다.",
+          `트랜잭션: ${txSig}`,
+          `캠페인 주소: ${campaignPubkey.toBase58()}`,
+        ].join("\n"),
       );
 
       // 폼 초기화
@@ -68,122 +94,104 @@ export default function CampaignForm() {
       setGoal("");
       setDonationAmount("");
       setEndDate("");
-    } catch (err: any) {
-      console.error("❌ Error creating campaign:", err);
-      setError(err.message || "캠페인 생성 중 오류가 발생했습니다.");
+
+      // 메인 캠페인 리스트 다시 불러오기 (SSR/Route Handler라면)
+      router.refresh();
+    } catch (e: any) {
+      console.error(e);
+      setError(e?.message ?? String(e));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-6 bg-gray-900/60 rounded-lg shadow-md border border-gray-800 mb-10">
-      <h2 className="text-2xl font-bold mb-4">새 캠페인 만들기</h2>
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+      <div>
+        <label className="block text-sm font-medium mb-1">캠페인 제목</label>
+        <input
+          className="w-full rounded border px-3 py-2 text-sm bg-black/40 border-white/10"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="예: ㅇㅇ 사건 집단소송 비용 모금"
+          required
+        />
+      </div>
 
-      {!connected && (
-        <div className="mb-4 p-3 text-sm rounded border border-yellow-600 bg-yellow-900/20 text-yellow-100">
-          지갑이 연결되어 있지 않습니다. 우측 상단의 지갑 버튼을 눌러
-          Phantom 지갑을 연결한 후 캠페인을 생성할 수 있습니다.
-        </div>
-      )}
+      <div>
+        <label className="block text-sm font-medium mb-1">설명</label>
+        <textarea
+          className="w-full rounded border px-3 py-2 text-sm bg-black/40 border-white/10 min-h-[100px]"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="사건 개요, 소송 진행 계획, 재단 계좌 정보 등을 간단히 적어주세요. (500자 이내)"
+          maxLength={500}
+          required
+        />
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block font-semibold mb-1 text-sm">
-            캠페인 제목
-          </label>
+          <label className="block text-sm font-medium mb-1">목표 금액</label>
           <input
-            type="text"
-            className="w-full p-2 bg-gray-800 rounded-md text-sm"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="예: OO 거래소 상장폐지 집단소송"
+            type="number"
+            className="w-full rounded border px-3 py-2 text-sm bg-black/40 border-white/10"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            placeholder="예: 1000000000"
             required
           />
+          <p className="mt-1 text-[11px] text-white/50">
+            (지금은 lamports 단위로 입력, 나중에 SOL 변환 UI 붙일 수 있음)
+          </p>
         </div>
 
         <div>
-          <label className="block font-semibold mb-1 text-sm">
-            캠페인 설명
-          </label>
-          <textarea
-            className="w-full p-2 bg-gray-800 rounded-md text-sm min-h-[80px]"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="사건의 개요, 목적, 예상 진행 방향 등을 간단히 적어주세요."
+          <label className="block text-sm font-medium mb-1">기부 단위 금액</label>
+          <input
+            type="number"
+            className="w-full rounded border px-3 py-2 text-sm bg-black/40 border-white/10"
+            value={donationAmount}
+            onChange={(e) => setDonationAmount(e.target.value)}
+            placeholder="예: 100000000"
+            required
           />
+          <p className="mt-1 text-[11px] text-white/50">
+            (모든 기부는 이 금액 단위로만 참여 가능)
+          </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block font-semibold mb-1 text-sm">
-              목표 금액 (SOL)
-            </label>
-            <input
-              type="number"
-              className="w-full p-2 bg-gray-800 rounded-md text-sm"
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
-              min={0}
-              step={0.01}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1 text-sm">
-              기부 단위 금액 (SOL)
-            </label>
-            <input
-              type="number"
-              className="w-full p-2 bg-gray-800 rounded-md text-sm"
-              value={donationAmount}
-              onChange={(e) => setDonationAmount(e.target.value)}
-              min={0}
-              step={0.01}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1 text-sm">
-              종료일
-            </label>
-            <input
-              type="date"
-              className="w-full p-2 bg-gray-800 rounded-md text-sm"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-pink-600 hover:bg-pink-700 disabled:bg-gray-600 p-2 rounded-md text-sm font-semibold mt-2"
-          disabled={loading || !connected}
-        >
-          {loading ? "캠페인 생성 중..." : "캠페인 생성하기"}
-        </button>
-      </form>
+      <div>
+        <label className="block text-sm font-medium mb-1">캠페인 종료일</label>
+        <input
+          type="date"
+          className="w-full rounded border px-3 py-2 text-sm bg-black/40 border-white/10"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          required
+        />
+      </div>
 
       {error && (
-        <div className="mt-4 p-3 text-sm rounded border border-red-600 bg-red-900/20 text-red-100 whitespace-pre-line">
+        <div className="text-xs text-red-400 whitespace-pre-wrap">
           {error}
         </div>
       )}
 
-      {message && (
-        <div className="mt-4 p-3 text-sm rounded border border-emerald-600 bg-emerald-900/20 text-emerald-100 whitespace-pre-line">
-          {message}
+      {successMsg && (
+        <div className="text-xs text-emerald-400 whitespace-pre-wrap">
+          {successMsg}
         </div>
       )}
 
-      <p className="mt-3 text-xs text-gray-500">
-        ※ 현재는 Solana devnet에서 테스트 중입니다. 실제 메인넷 펀딩 전에는
-        별도의 안내와 검증 절차가 추가됩니다.
-      </p>
-    </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full rounded-md px-4 py-2 text-sm font-semibold bg-pink-600 disabled:opacity-50"
+      >
+        {loading ? "캠페인 생성 중..." : "캠페인 생성"}
+      </button>
+    </form>
   );
 }
