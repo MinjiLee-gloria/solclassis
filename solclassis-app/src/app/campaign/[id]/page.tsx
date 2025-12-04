@@ -1,47 +1,32 @@
-"use client"; // 클라이언트 사이드에서 실행됨을 나타냅니다.
+interface CampaignDetailPageProps {
+  params: { id: string };
+}
 
-import { useEffect, useState } from "react";
-
-// Next.js 동적 라우트의 params에서 캠페인 id를 추출합니다.
-export default function CampaignDetail({ params }: { params: { id: string } }) {
-  const { id } = params; // URL에 포함된 캠페인 id
-
-  // 캠페인 데이터, 에러, 로딩 상태를 관리합니다.
-  const [campaign, setCampaign] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  // 컴포넌트가 마운트될 때 API 엔드포인트에서 캠페인 데이터를 불러옵니다.
-  useEffect(() => {
-    async function fetchCampaign() {
-      try {
-        // API 엔드포인트: src/app/api/campaigns/[id]/route.ts 에서 처리되는 캠페인 상세 조회
-        const res = await fetch(`/api/campaigns/${id}`);
-        if (!res.ok) {
-          throw new Error("캠페인 데이터를 불러오는데 실패했습니다.");
-        }
-        const data = await res.json();
-        setCampaign(data);
-      } catch (err: any) {
-        setError(err.message);
-      }
-    }
-    fetchCampaign();
-  }, [id]);
-
-  if (error) return <p className="text-red-500">Error: {error}</p>;
-  if (!campaign) return <p>Loading...</p>;
+export default function CampaignDetailPage({ params }: CampaignDetailPageProps) {
+  const { id } = params;
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{campaign.title}</h1>
-      <p className="text-gray-700 mb-2">📝 설명: {campaign.description}</p>
-      <p className="mb-2">🎯 목표 금액: {campaign.goal} SOL</p>
-      <p className="mb-2">💰 모금된 금액: {campaign.raised} SOL</p>
-      <p className="mb-2">📅 종료일: {campaign.endDate}</p>
-      <p className="mb-2">👤 생성자: {campaign.creator}</p>
-      <p className="mb-2">🏦 재단 지갑: {campaign.foundation}</p>
-      <p className="mb-2">
-        상태: {campaign.complete ? "✅ 완료" : campaign.failed ? "❌ 실패" : "⏳ 진행 중"}
+    <div className="max-w-4xl mx-auto py-10 space-y-4">
+      <h1 className="text-2xl font-bold mb-2">캠페인 상세</h1>
+      <p className="text-gray-400 text-sm break-all">
+        온체인에서 불러올 캠페인 주소:
+        <br />
+        <span className="text-pink-400">{id}</span>
+      </p>
+
+      <p className="text-gray-300">
+        이 페이지에서는 앞으로 다음 정보를 보여줄 예정입니다.
+      </p>
+      <ul className="list-disc list-inside text-gray-300 space-y-1">
+        <li>캠페인 제목, 설명, 목표·모금 금액</li>
+        <li>진행 상태 (진행 중 / 완료 / 실패)</li>
+        <li>펀딩 참여 / 환불 버튼</li>
+        <li>사건 요약, 소송 진행 상황, 공지사항 등</li>
+      </ul>
+
+      <p className="text-xs text-gray-500">
+        ※ 현재는 구조만 만들어 둔 상태이며, 온체인 데이터 조회 및 UI는 이후 단계에서
+        연결됩니다.
       </p>
     </div>
   );

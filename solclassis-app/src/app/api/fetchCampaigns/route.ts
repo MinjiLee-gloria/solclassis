@@ -1,16 +1,26 @@
-// src/app/api/fetchCampaigns/route.ts
 import { NextResponse } from "next/server";
 import { fetchCampaigns } from "@/utils/fetchCampaigns";
+import type { Campaign } from "@/types/campaign";
+import type { ApiResponse } from "@/types/api";
 
 export async function GET() {
   try {
-    const campaigns = await fetchCampaigns();
-    return NextResponse.json(campaigns, { status: 200 });
-  } catch (error: any) {
-    console.error("❌ Error in /api/fetchCampaigns:", error);
+    const campaigns: Campaign[] = await fetchCampaigns();
 
-    // 🔥 지금은 UI가 깨지는 것보다 "빈 리스트라도 보여주는 것"이 낫다
-    //    나중에 디버깅 끝나면 500으로 돌려도 됨
-    return NextResponse.json([], { status: 200 });
+    const body: ApiResponse<Campaign[]> = {
+      success: true,
+      data: campaigns,
+    };
+
+    return NextResponse.json(body, { status: 200 });
+  } catch (error: any) {
+    console.error("❌ Failed to fetch campaigns:", error);
+
+    const body: ApiResponse<null> = {
+      success: false,
+      error: error?.message || "Failed to fetch campaigns",
+    };
+
+    return NextResponse.json(body, { status: 500 });
   }
 }

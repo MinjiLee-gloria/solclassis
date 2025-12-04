@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
-import React from "react";
-import { WalletContextProvider } from "@/contexts/WalletContext";
+import "./globals.css";
+import "@solana/wallet-adapter-react-ui/styles.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
-import "./globals.css";
+import { WalletContextProvider } from "@/contexts/WalletContext";
 
 export const metadata: Metadata = {
-  title: "SolClassis",
-  description: "A decentralized crowdfunding platform on Solana",
+  title: "SOLCLASSIS",
+  description: "Solana 기반 집단소송·공익소송 크라우드펀딩 플랫폼",
 };
 
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="bg-[#0d0d0d] text-[#e0e0e0] font-inter">
+    <html lang="ko">
+      <body className="bg-black text-white">
         <WalletContextProvider>
           <NavBar />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen max-w-5xl mx-auto px-4">
+            {children}
+          </main>
           <Footer />
         </WalletContextProvider>
       </body>

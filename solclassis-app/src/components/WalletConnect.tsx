@@ -1,61 +1,31 @@
 "use client";
-import React, { useState, useCallback } from "react";
-import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import WalletModal from "@/components/WalletModal";
-import { WalletName } from "@solana/wallet-adapter-base";
 
-const WalletConnect: React.FC = () => {
-  const { connected, publicKey, disconnect, select } = useWallet();
-  const { connection } = useConnection();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
-  const handleConnect = (walletName: WalletName) => {
-    select(walletName);
-    setIsModalOpen(false);
-  };
+// WalletMultiButton을 클라이언트에서만 로드하도록 설정
+const WalletMultiButtonDynamic = dynamic(
+  async () =>
+    (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
+  { ssr: false }
+);
 
-  const handleDisconnect = useCallback(() => {
-    disconnect();
-  }, [disconnect]);
+export default function WalletConnect() {
+  const [mounted, setMounted] = useState(false);
+
+  // 브라우저에 마운트된 뒤에만 렌더링
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // 서버 렌더링 시 / 첫 마운트 전에는 아무것도 그리지 않음
+    return null;
+  }
 
   return (
-    <div className="relative flex flex-col items-center">
-      {/* 버튼 클릭 시 모달 열기 */}
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="bg-neon-pink text-white font-bold py-2 px-4 rounded hover:bg-neon-pink-hover transition"
-      >
-        {connected && publicKey
-          ? `${publicKey.toBase58().slice(0, 6)}...${publicKey.toBase58().slice(-4)}`
-          : "Connect Wallet"}
-      </button>
-
-      {/* 네트워크 및 주소 정보 */}
-      {connected && (
-        <div className="mt-2 text-center">
-          <p className="text-sm text-gray-400">
-            Network: <span className="text-neon-violet">Devnet</span>
-          </p>
-          <p className="text-sm text-gray-400">
-            Address: <span className="text-neon-violet">{publicKey?.toBase58()}</span>
-          </p>
-        </div>
-      )}
-
-      {/* 연결된 경우 Disconnect 버튼 */}
-      {connected && (
-        <button
-          onClick={handleDisconnect}
-          className="mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition"
-        >
-          Disconnect
-        </button>
-      )}
-
-      {/* 모달 컴포넌트 */}
-      <WalletModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onConnect={handleConnect} />
+    <div className="flex items-center justify-end">
+      <WalletMultiButtonDynamic />
     </div>
   );
-};
-
-export default WalletConnect;
+}

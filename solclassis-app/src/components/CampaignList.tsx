@@ -1,123 +1,205 @@
 // src/components/CampaignList.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { Campaign } from "@/types/campaign";
+
+interface ApiError extends Error {
+  status?: number;
+}
+
+function getStatusBadge(c: Campaign) {
+  const now = new Date();
+  const end = new Date(c.endDate);
+
+  if (c.failed) {
+    return { label: "실패", className: "bg-red-500/10 text-red-300" };
+  }
+  if (c.complete || c.raised >= c.goal) {
+    return { label: "완료", className: "bg-emerald-500/10 text-emerald-300" };
+  }
+  if (end < now) {
+    return { label: "종료", className: "bg-gray-500/10 text-gray-300" };
+  }
+  return { label: "진행 중", className: "bg-indigo-500/10 text-indigo-300" };
+}
+
+function ProgressBar({ goal, raised }: { goal: number; raised: number }) {
+  const ratio = goal > 0 ? Math.min(100, Math.round((raised / goal) * 100)) : 0;
+
+  return (
+    <div className="mt-4">
+      <div className="h-2 w-full rounded-full bg-gray-800 overflow-hidden">
+        <div
+          className="h-full rounded-full bg-indigo-500 transition-all"
+          style={{ width: `${ratio}%` }}
+        />
+      </div>
+      <p className="mt-1 text-xs text-gray-400">
+        {raised} SOL / {goal} SOL ({ratio}%)
+      </p>
+    </div>
+  );
+}
 
 export default function CampaignList() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch("/api/fetchCampaigns");
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error(
-            "Error response from /api/fetchCampaigns:",
-            res.status,
-            text
-          );
-          setError("캠페인 목록을 불러오는데 실패했습니다.");
-          return;
-        }
-
-        const data: Campaign[] = await res.json();
-        setCampaigns(data);
-      } catch (err) {
-        console.error("Error fetching campaigns:", err);
-        setError("알 수 없는 오류가 발생했습니다.");
-      } finally {
-        setLoading(false);
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const res = await fetch("/api/campaigns");
+  
+      if (!res.ok) {
+        const text = await res.text();
+        const err: ApiError = new Error("API 요청 실패");
+        err.status = res.status;
+        console.error("❌ /api/campaigns error:", res.status, text);
+        throw err;
       }
-    };
+  
+      const json = await res.json();
+  
+      // 🔥 여기서 배열 형태로 강제 변환
+      const list = Array.isArray(json)
+        ? json
+        : Array.isArray(json.data)
+        ? json.data
+        : [];
+  
+      setCampaigns(list);
+    } catch (err: any) {
+      console.error("❌ 캠페인 불러오기 실패:", err);
+      setError(
+        err?.message || "캠페인 목록을 불러오는 중 오류가 발생했습니다."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
-    load();
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  const activeCampaigns = useMemo(
+    () => campaigns.filter((c) => !c.failed),
+    [campaigns]
+  );
+  const closedCampaigns = useMemo(
+    () => campaigns.filter((c) => c.failed),
+    [campaigns]
+  );
 
-  if (campaigns.length === 0) {
-    return <p className="text-gray-400">아직 등록된 캠페인이 없습니다.</p>;
+  // 로딩 상태
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-500" />
+        <p className="ml-4 text-gray-400">캠페인을 불러오는 중...</p>
+      </div>
+    );
   }
 
-  return (
-    <div className="space-y-4">
-      {campaigns.map((campaign) => {
-        const progress =
-          campaign.goal > 0
-            ? Math.min(100, Math.round((campaign.raised / campaign.goal) * 100))
-            : 0;
+  // 에러 상태
+  if (error) {
+    return (
+      <div className="p-4 bg-red-900/20 border border-red-500/70 rounded-lg">
+        <p className="text-red-400 font-semibold mb-2">
+          ❌ 캠페인을 불러올 수 없습니다
+        </p>
+        <p className="text-red-200 text-xs mb-3 break-all">{error}</p>
+        <button
+          onClick={fetchData}
+          className="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 rounded-md text-white"
+        >
+          🔄 다시 시도
+        </button>
+      </div>
+    );
+  }
 
-        const statusLabel = campaign.complete
-          ? "완료"
-          : campaign.failed
-          ? "실패"
-          : "진행 중";
+  if (campaigns.length === 0) {
+    return (
+      <p className="text-gray-400 text-sm">
+        아직 등록된 캠페인이 없습니다. Solclassis가 검토 중입니다.
+      </p>
+    );
+  }
 
-        const statusColor = campaign.complete
-          ? "bg-emerald-600"
-          : campaign.failed
-          ? "bg-red-600"
-          : "bg-indigo-600";
+  const renderCampaignCard = (c: Campaign) => {
+    const badge = getStatusBadge(c);
 
-        return (
-          <div
-            key={campaign.id}
-            className="border border-gray-700 rounded-xl p-4 bg-gray-900/60 shadow-sm"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <h3 className="font-semibold text-lg text-white">
-                  {campaign.title}
-                </h3>
-                <p className="text-xs text-gray-400 mt-1">
-                  주최: Solclassis · 재단: {campaign.foundation}
-                </p>
-              </div>
-              <span
-                className={`px-2 py-1 text-xs rounded-full text-white ${statusColor}`}
-              >
-                {statusLabel}
-              </span>
-            </div>
-
-            <p className="text-sm text-gray-300 mt-3">
-              {campaign.description}
+    return (
+      <li
+        key={c.id}
+        className="p-5 mb-4 rounded-xl border border-gray-800 bg-gray-900/60 hover:bg-gray-900 transition-colors"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-1">{c.title}</h3>
+            <p className="text-xs text-gray-400 mb-2">
+              주최: Solclassis · 재단: {c.foundation}
             </p>
-
-            <div className="mt-4 space-y-1 text-sm text-gray-300">
-              <p>
-                목표 금액:{" "}
-                <span className="font-semibold">
-                  {campaign.goal.toLocaleString()} SOL
-                </span>
-              </p>
-              <p>
-                모금된 금액:{" "}
-                <span className="font-semibold">
-                  {campaign.raised.toLocaleString()} SOL
-                </span>{" "}
-                ({progress}
-                %)
-              </p>
-              <p>기부 단위 금액: {campaign.donationAmount} SOL</p>
-              <p>종료일: {campaign.endDate}</p>
-            </div>
-
-            <div className="mt-4 h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-indigo-500"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+            <p className="text-sm text-gray-300">{c.description}</p>
           </div>
-        );
-      })}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${badge.className}`}
+          >
+            {badge.label}
+          </span>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-300">
+          <div>
+            <p className="text-gray-400">목표 금액</p>
+            <p className="font-semibold">{c.goal} SOL</p>
+          </div>
+          <div>
+            <p className="text-gray-400">모금된 금액</p>
+            <p className="font-semibold">{c.raised} SOL</p>
+          </div>
+          <div>
+            <p className="text-gray-400">기부 단위 금액</p>
+            <p className="font-semibold">{c.donationAmount} SOL</p>
+          </div>
+          <div>
+            <p className="text-gray-400">종료일</p>
+            <p className="font-semibold">{c.endDate}</p>
+          </div>
+        </div>
+
+        <ProgressBar goal={c.goal} raised={c.raised} />
+      </li>
+    );
+  };
+
+  return (
+    <div className="space-y-8">
+      <section>
+        <h2 className="text-xl font-bold mb-3">진행 중인 캠페인</h2>
+        <ul>
+          {activeCampaigns.length > 0 ? (
+            activeCampaigns.map(renderCampaignCard)
+          ) : (
+            <p className="text-sm text-gray-400">
+              현재 진행 중인 캠페인이 없습니다.
+            </p>
+          )}
+        </ul>
+      </section>
+
+      {closedCampaigns.length > 0 && (
+        <section>
+          <h2 className="text-xl font-bold mb-3">종료된 캠페인</h2>
+          <ul>{closedCampaigns.map(renderCampaignCard)}</ul>
+        </section>
+      )}
     </div>
   );
 }
