@@ -1,96 +1,117 @@
+// src/utils/createCampaign.ts
 import {
-  Connection,
+  AnchorProvider,
+  BorshCoder,
+  Idl,
+  BN,
+} from "@coral-xyz/anchor";
+import {
   Keypair,
   PublicKey,
   SystemProgram,
+  Transaction,
+  TransactionInstruction,
 } from "@solana/web3.js";
-import { AnchorProvider, Program, Idl } from "@coral-xyz/anchor";
-import BN from "bn.js";
-import idlJson from "@/idl/solclassis.json";
-import type { Wallet as AnchorWallet } from "@coral-xyz/anchor/dist/cjs/provider";
+import idl from "../anchor/solclassis.json";
 
-const LAMPORTS_PER_SOL = 1_000_000_000;
+const PROGRAM_ID = new PublicKey("Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3");
 
-interface CreateCampaignParams {
+export type CreateCampaignParams = {
   title: string;
   description: string;
-  goalSol: number;
-  donationSol: number;
-  endDate: Date; // JS Date
-}
+  goal: number;
+  donationAmount: number;
+  endDate: number; // unix timestamp (초)
+};
 
-// wallet: wallet-adapter의 adapter (publicKey, signTransaction 등 포함)
 export async function createCampaignOnChain(
-  wallet: any,
-  params: CreateCampaignParams
+  provider: AnchorProvider,
+  creatorPubkey: PublicKey,
+  params: CreateCampaignParams,
+  foundationPubkey?: PublicKey,
 ) {
-  if (!wallet?.publicKey) {
-    throw new Error("지갑이 연결되어 있지 않습니다.");
+  const campaignKeypair = Keypair.generate();
+  const foundation = foundationPubkey ?? creatorPubkey;
+
+  // 1) IDL에서 create_campaign 계열 instruction 찾기
+  const idlTyped = idl as Idl & { instructions?: any[] };
+  const createIx = idlTyped.instructions?.find((ix: any) =>
+    ix.name.toLowerCase().includes("create") &&
+    ix.name.toLowerCase().includes("campaign")
+  );
+
+  if (!createIx) {
+    const names =
+      idlTyped.instructions?.map((ix: any) => ix.name).join(", ") ?? "[]";
+    throw new Error(
+      `create_campaign instruction not found in IDL. instructions: ${names}`,
+    );
   }
 
-  const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+  const methodName = createIx.name;
+  const coder = new BorshCoder(idlTyped);
 
-  const anchorWallet: AnchorWallet = {
-    publicKey: wallet.publicKey,
-    signTransaction: wallet.signTransaction.bind(wallet),
-    signAllTransactions: wallet.signAllTransactions.bind(wallet),
-  };
+  // 2) IDL의 args 이름에 따라 값 매핑
+  const values: any = {};
+  for (const arg of createIx.args as { name: string }[]) {
+    const n = arg.name.toLowerCase();
 
-  const provider = new AnchorProvider(connection, anchorWallet, {
-    preflightCommitment: "processed",
+    if (n.includes("title")) {
+      values[arg.name] = params.title;
+    } else if (n.includes("desc")) {
+      values[arg.name] = params.description;
+    } else if (n.includes("goal") || n.includes("target")) {
+      values[arg.name] = new BN(params.goal);
+    } else if (n.includes("donation") || n.includes("amount")) {
+      values[arg.name] = new BN(params.donationAmount);
+    } else if (n.includes("end") && n.includes("date")) {
+      values[arg.name] = new BN(params.endDate);
+    } else {
+      // 혹시 모르는 arg는 일단 0으로
+      values[arg.name] = new BN(0);
+    }
+  }
+
+  // 3) BorshCoder로 인코딩
+  const data = coder.instruction.encode(methodName, values);
+
+  // 4) 계정 메타
+  const keys = [
+    {
+      pubkey: campaignKeypair.publicKey,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: creatorPubkey,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: foundation,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: SystemProgram.programId,
+      isSigner: false,
+      isWritable: false,
+    },
+  ];
+
+  const ix = new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys,
+    data,
   });
 
-  // 프로그램 ID는 IDL 안에 들어있다고 가정
-  const program = new Program(idlJson as Idl, provider);
+  const tx = new Transaction().add(ix);
+  tx.feePayer = creatorPubkey;
 
-  // 새 캠페인 계정용 키쌍 생성
-  const campaignKeypair = Keypair.generate();
-
-  const goalLamports = new BN(Math.round(params.goalSol * LAMPORTS_PER_SOL));
-  const donationLamports = new BN(
-    Math.round(params.donationSol * LAMPORTS_PER_SOL)
-  );
-  const endTimestamp = new BN(
-    Math.floor(params.endDate.getTime() / 1000) // i64 unix timestamp
-  );
-
-  // 일단 테스트 단계에서는 foundation = creator 로 둠
-  const foundationPubkey = new PublicKey(
-    process.env.NEXT_PUBLIC_FOUNDATION_WALLET || wallet.publicKey.toBase58()
-  );
-
-  console.log("📡 createCampaign args:", {
-    title: params.title,
-    description: params.description,
-    goalLamports: goalLamports.toString(),
-    donationLamports: donationLamports.toString(),
-    endTimestamp: endTimestamp.toString(),
-    campaign: campaignKeypair.publicKey.toBase58(),
-    creator: wallet.publicKey.toBase58(),
-    foundation: foundationPubkey.toBase58(),
-  });
-
-  const txSig = await program.methods
-    .createCampaign(
-      params.title,
-      params.description,
-      goalLamports,
-      donationLamports,
-      endTimestamp
-    )
-    .accounts({
-      campaign: campaignKeypair.publicKey,
-      creator: wallet.publicKey,
-      foundation: foundationPubkey,
-      systemProgram: SystemProgram.programId,
-    })
-    .signers([campaignKeypair])
-    .rpc();
-
-  console.log("✅ Campaign created. tx:", txSig);
+  const txSig = await provider.sendAndConfirm(tx, [campaignKeypair]);
 
   return {
     txSig,
-    campaignPubkey: campaignKeypair.publicKey.toBase58(),
+    campaignPubkey: campaignKeypair.publicKey,
   };
 }

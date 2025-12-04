@@ -23,6 +23,9 @@ pub mod solclassis {
         if description.len() > MAX_DESCRIPTION_LENGTH {
             return Err(ErrorCode::DescriptionTooLong.into());
         }
+        if donation_amount == 0 {
+            return Err(ErrorCode::InvalidGoalAmount.into());
+        }
         if goal % donation_amount != 0 {
             return Err(ErrorCode::InvalidGoalAmount.into());
         }
