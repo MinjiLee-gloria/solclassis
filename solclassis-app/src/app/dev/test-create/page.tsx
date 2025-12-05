@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { createCampaignOnChain } from "@/utils/createCampaign";
+import {  } from "@/utils/createCampaign";
 
 export default function TestCreateCampaignPage() {
   const { connection } = useConnection();
@@ -26,7 +26,7 @@ export default function TestCreateCampaignPage() {
         commitment: "confirmed",
       });
 
-      const { txSig, campaignPubkey } = await createCampaignOnChain(
+      const { txSig, campaignPubkey } = await (
         provider,
         wallet.publicKey,
         {

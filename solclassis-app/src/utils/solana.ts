@@ -5,7 +5,7 @@ import IDL from "@/idl/solclassis.json";
 const RPC_URL =
   process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 
-const PROGRAM_ID = new PublicKey(
+export const PROGRAM_ID = new PublicKey(
   process.env.NEXT_PUBLIC_SOLCLASSIS_PROGRAM_ID ??
     "Hs68KZpxy8yxem4VhMXerpBQFK2YWJCbXMcYCDTNJTF3"
 );

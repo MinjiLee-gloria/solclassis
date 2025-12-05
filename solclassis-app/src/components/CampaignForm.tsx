@@ -4,7 +4,7 @@
 import { useState, FormEvent } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { createCampaignOnChain } from "@/utils/createCampaign";
+import {  } from "@/utils/createCampaign";
 import { useRouter } from "next/navigation";
 
 export default function CampaignForm() {
@@ -67,7 +67,7 @@ export default function CampaignForm() {
         commitment: "confirmed",
       });
 
-      const { txSig, campaignPubkey } = await createCampaignOnChain(
+      const { txSig, campaignPubkey } = await (
         provider,
         wallet.publicKey,
         {

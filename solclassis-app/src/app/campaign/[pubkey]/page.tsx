@@ -1,7 +1,26 @@
+// app/campaign/[pubkey]/page.tsx
+/**
+ * TECH-DEBT / REFACTOR NOTE (MVP 끝나고 할 일)
+ *
+ * 1) 이 페이지는 현재 전체가 클라이언트 컴포넌트임.
+ *    - 추후:
+ *      - page.tsx -> 서버 컴포넌트로 전환
+ *      - ClientCampaignDetail.tsx (client)로 분리
+ *      - 서버에서 캠페인 데이터 prefetch + SEO 개선
+ *
+ * 2) 온체인 로직
+ *    - donateOnChain / createCampaignOnChain 등을 공통 utils로 정리
+ *    - Anchor Program methods 기반 코드로 리팩토링 (program.methods...)
+ */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
+
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { AnchorProvider, Wallet as AnchorWallet } from "@coral-xyz/anchor";
+import { PublicKey } from "@solana/web3.js";
+import { donateOnChain } from "@/utils/donate";
 
 type Campaign = {
   pubkey: string;
@@ -20,70 +39,116 @@ export default function CampaignPage() {
   const params = useParams<{ pubkey: string }>();
   const pubkey = params?.pubkey as string;
 
-  const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { connection } = useConnection();
+  const wallet = useWallet();
 
-  // 2) 브라우저에서 /api/campaigns(응답: JSON) 가져와서 해당 pubkey 검색
-  useEffect(() => {
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
+  const [loading, setLoading] = useState(true);            // 캠페인 로딩
+  const [error, setError] = useState<string | null>(null); // 캠페인 로딩 에러
+
+  const [donateLoading, setDonateLoading] = useState(false);      // 기부 트랜잭션 로딩
+  const [donateError, setDonateError] = useState<string | null>(null);
+  const [txSig, setTxSig] = useState<string | null>(null);
+
+  const isWalletConnected = !!wallet.publicKey;
+
+  // 2) /api/campaigns 에서 해당 pubkey 캠페인 가져오기
+  const loadCampaign = useCallback(async () => {
     if (!pubkey) return;
 
-    const fetchCampaign = async () => {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      try {
-        const res = await fetch("/api/campaigns", { cache: "no-store" });
+    try {
+      const res = await fetch("/api/campaigns", { cache: "no-store" });
 
-        if (!res.ok) {
-          throw new Error("캠페인 목록을 불러오지 못했습니다.");
-        }
-
-        const body = await res.json();
-        // body 구조(structure): { success: boolean, data?: Campaign[] }
-        const list = (body as any).data as any[];
-
-        // API 쪽에서 id = 캠페인 주소(pubkey)로 내려주고 있으니까
-        const found = list.find((c) => c.id === pubkey);
-
-        if (!found) {
-          setError("해당 캠페인을 찾을 수 없습니다.");
-          setCampaign(null);
-        } else {
-          // API 구조 → 이 페이지에서 쓰는 구조로 맞추기
-          const endDateStr = found.endDate as string; // "YYYY-MM-DD"
-          const endDateUnix =
-            endDateStr && endDateStr.length >= 10
-              ? Math.floor(
-                  new Date(endDateStr + "T00:00:00Z").getTime() / 1000
-                )
-              : 0;
-
-          setCampaign({
-            pubkey,
-            title: found.title ?? "",
-            description: found.description ?? "",
-            goal: Number(found.goal ?? 0),
-            raised: Number(found.raised ?? 0),
-            donationAmount: Number(found.donationAmount ?? 0),
-            endDate: endDateUnix,
-            complete: Boolean(found.complete),
-            failed: Boolean(found.failed),
-          });
-        }
-      } catch (e: any) {
-        console.error(e);
-        setError(e.message ?? "알 수 없는 오류가 발생했습니다.");
-        setCampaign(null);
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error("캠페인 목록을 불러오지 못했습니다.");
       }
-    };
 
-    fetchCampaign();
+      const body = await res.json();
+      // body 구조(structure): { success: boolean, data?: Campaign[] }
+      const list = (body as any).data as any[];
+
+      // API 쪽에서 id = 캠페인 주소(pubkey)로 내려주고 있으니까
+      const found = list.find((c) => c.id === pubkey);
+
+      if (!found) {
+        setError("해당 캠페인을 찾을 수 없습니다.");
+        setCampaign(null);
+      } else {
+        // API 구조 → 이 페이지에서 쓰는 구조로 맞추기
+        const endDateStr = found.endDate as string; // "YYYY-MM-DD"
+        const endDateUnix =
+          endDateStr && endDateStr.length >= 10
+            ? Math.floor(new Date(endDateStr + "T00:00:00Z").getTime() / 1000)
+            : 0;
+
+        setCampaign({
+          pubkey,
+          title: found.title ?? "",
+          description: found.description ?? "",
+          goal: Number(found.goal ?? 0),
+          raised: Number(found.raised ?? 0),
+          donationAmount: Number(found.donationAmount ?? 0),
+          endDate: endDateUnix,
+          complete: Boolean(found.complete),
+          failed: Boolean(found.failed),
+        });
+      }
+    } catch (e: any) {
+      console.error(e);
+      setError(e.message ?? "알 수 없는 오류가 발생했습니다.");
+      setCampaign(null);
+    } finally {
+      setLoading(false);
+    }
   }, [pubkey]);
 
-  // 3) 로딩 화면
+  useEffect(() => {
+    loadCampaign();
+  }, [loadCampaign]);
+
+  // 3) 기부 버튼 클릭 핸들러
+  const handleDonate = async () => {
+    if (!campaign) return;
+
+    if (!wallet.publicKey || !wallet.signTransaction) {
+      setDonateError("지갑이 연결되어 있지 않거나, 서명 기능이 없습니다.");
+      return;
+    }
+
+    setDonateLoading(true);
+    setDonateError(null);
+    setTxSig(null);
+
+    try {
+      const provider = new AnchorProvider(
+        connection,
+        wallet as unknown as AnchorWallet,
+        { commitment: "confirmed" }
+      );
+
+      const sig = await donateOnChain(
+        provider,
+        new PublicKey(campaign.pubkey),
+        wallet.publicKey,
+        campaign.donationAmount, 
+      );
+
+      setTxSig(sig);
+
+      // 온체인 raised 값 반영 위해 다시 캠페인 데이터 로딩
+      await loadCampaign();
+    } catch (e: any) {
+      console.error(e);
+      setDonateError(e?.message ?? "트랜잭션 실패");
+    } finally {
+      setDonateLoading(false);
+    }
+  };
+
+  // 4) 로딩 화면
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-10 text-white">
@@ -93,7 +158,7 @@ export default function CampaignPage() {
     );
   }
 
-  // 4) 에러 화면
+  // 5) 에러 화면
   if (error || !campaign) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-10 text-white">
@@ -112,7 +177,7 @@ export default function CampaignPage() {
     );
   }
 
-  // 5) 정상 데이터 화면
+  // 6) 정상 데이터 화면
   const progress =
     campaign.goal > 0 ? Math.min(100, (campaign.raised / campaign.goal) * 100) : 0;
 
@@ -170,7 +235,7 @@ export default function CampaignPage() {
       </div>
 
       {/* 진행률 바 */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex justify-between text-xs text-gray-400 mb-1">
           <span>진행률</span>
           <span>{progress.toFixed(1)}%</span>
@@ -183,12 +248,32 @@ export default function CampaignPage() {
         </div>
       </div>
 
-      {/* 나중에 donate 플로우 연결할 자리 */}
+      {/* 지갑 안내 / 에러 / Tx 표시 */}
+      {!isWalletConnected && (
+        <p className="text-xs text-yellow-400 mb-2">
+          지갑을 연결하시면 기부하실 수 있어요.
+        </p>
+      )}
+
+      {donateError && (
+        <p className="text-xs text-red-400 mb-2">
+          ⚠️ {donateError}
+        </p>
+      )}
+
+      {txSig && (
+        <p className="text-xs text-emerald-400 mb-2 break-all">
+          ✅ 기부 완료! Tx: {txSig}
+        </p>
+      )}
+
+      {/* 기부 버튼 */}
       <button
-        className="w-full py-3 rounded-xl bg-pink-600 hover:bg-pink-500 text-sm font-semibold disabled:opacity-50"
-        disabled
+        className="w-full py-3 rounded-xl bg-pink-600 hover:bg-pink-500 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!isWalletConnected || donateLoading}
+        onClick={handleDonate}
       >
-        기부하기 (준비 중)
+        {donateLoading ? "트랜잭션 전송 중…" : "기부하기"}
       </button>
     </div>
   );
